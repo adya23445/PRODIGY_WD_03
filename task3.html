@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tic-Tac-Toe Game</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #160b55, #176bc1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-container {
+            background: white;
+            width: 90%;
+            max-width: 420px;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #160b55;
+            font-size: 38px;
+            margin-bottom: 10px;
+        }
+
+        #status {
+            font-size: 20px;
+            font-weight: bold;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            border: none;
+            border-radius: 12px;
+            background: #eeeeee;
+            font-size: 45px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .cell:hover {
+            background: #d6d6d6;
+            transform: scale(1.03);
+        }
+
+        .cell.x {
+            color: #6a11cb;
+        }
+
+        .cell.o {
+            color: #176bc1;
+        }
+
+        #restart {
+            padding: 13px 28px;
+            border: none;
+            border-radius: 25px;
+            background: #160b55;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        #restart:hover {
+            background: #321a8c;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 400px) {
+
+            .game-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 30px;
+            }
+
+            .board {
+                grid-template-columns: repeat(3, 80px);
+                grid-template-rows: repeat(3, 80px);
+                gap: 6px;
+            }
+
+            .cell {
+                width: 80px;
+                height: 80px;
+                font-size: 35px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="game-container">
+
+        <h1>🎮 Tic-Tac-Toe</h1>
+
+        <p id="status">Player X's Turn</p>
+
+        <div class="board">
+
+            <button class="cell" data-index="0"></button>
+            <button class="cell" data-index="1"></button>
+            <button class="cell" data-index="2"></button>
+
+            <button class="cell" data-index="3"></button>
+            <button class="cell" data-index="4"></button>
+            <button class="cell" data-index="5"></button>
+
+            <button class="cell" data-index="6"></button>
+            <button class="cell" data-index="7"></button>
+            <button class="cell" data-index="8"></button>
+
+        </div>
+
+        <button id="restart">🔄 Restart Game</button>
+
+    </div>
+
+
+    <script>
+
+        // Get all cells
+        const cells = document.querySelectorAll(".cell");
+
+        const statusText = document.getElementById("status");
+
+        const restartButton =
+            document.getElementById("restart");
+
+
+        // Current player
+        let currentPlayer = "X";
+
+        // Game status
+        let gameActive = true;
+
+        // Store board values
+        let gameState = [
+            "", "", "",
+            "", "", "",
+            "", "", ""
+        ];
+
+
+        // Winning combinations
+        const winningPatterns = [
+
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+
+            [0, 4, 8],
+            [2, 4, 6]
+
+        ];
+
+
+        // When a cell is clicked
+        function handleCellClick(event) {
+
+            const clickedCell = event.target;
+
+            const index =
+                clickedCell.getAttribute("data-index");
+
+
+            // Don't allow already-filled cells
+            if (
+                gameState[index] !== "" ||
+                gameActive === false
+            ) {
+                return;
+            }
+
+
+            // Store player
+            gameState[index] = currentPlayer;
+
+            // Display player
+            clickedCell.textContent = currentPlayer;
+
+
+            // Add color
+            if (currentPlayer === "X") {
+
+                clickedCell.classList.add("x");
+
+            } else {
+
+                clickedCell.classList.add("o");
+
+            }
+
+
+            // Check winner
+            checkWinner();
+        }
+
+
+        // Check winning condition
+        function checkWinner() {
+
+            let winner = false;
+
+
+            for (let pattern of winningPatterns) {
+
+                const a = pattern[0];
+                const b = pattern[1];
+                const c = pattern[2];
+
+
+                if (
+                    gameState[a] !== "" &&
+                    gameState[a] === gameState[b] &&
+                    gameState[a] === gameState[c]
+                ) {
+
+                    winner = true;
+
+                    break;
+                }
+            }
+
+
+            // If winner
+            if (winner) {
+
+                statusText.textContent =
+                    "🎉 Player " + currentPlayer + " Wins!";
+
+                gameActive = false;
+
+                return;
+            }
+
+
+            // Check draw
+            if (!gameState.includes("")) {
+
+                statusText.textContent =
+                    "🤝 Game Draw!";
+
+                gameActive = false;
+
+                return;
+            }
+
+
+            // Change player
+            currentPlayer =
+                currentPlayer === "X" ? "O" : "X";
+
+
+            statusText.textContent =
+                "Player " + currentPlayer + "'s Turn";
+        }
+
+
+        // Restart game
+        function restartGame() {
+
+            currentPlayer = "X";
+
+            gameActive = true;
+
+            gameState = [
+                "", "", "",
+                "", "", "",
+                "", "", ""
+            ];
+
+
+            statusText.textContent =
+                "Player X's Turn";
+
+
+            cells.forEach(function(cell) {
+
+                cell.textContent = "";
+
+                cell.classList.remove("x");
+
+                cell.classList.remove("o");
+
+            });
+        }
+
+
+        // Add click event to every cell
+        cells.forEach(function(cell) {
+
+            cell.addEventListener(
+                "click",
+                handleCellClick
+            );
+
+        });
+
+
+        // Restart button
+        restartButton.addEventListener(
+            "click",
+            restartGame
+        );
+
+    </script>
+
+</body>
+</html>
