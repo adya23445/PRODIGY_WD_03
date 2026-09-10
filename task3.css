@@ -1,0 +1,98 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #6a11cb, #2575fc);
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-container {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+#status {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #555;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    border: none;
+    border-radius: 10px;
+    background: #f0f0f0;
+    font-size: 45px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.cell:hover {
+    background: #ddd;
+}
+
+.cell.x {
+    color: #6a11cb;
+}
+
+.cell.o {
+    color: #2575fc;
+}
+
+#restart {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    background: #6a11cb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#restart:hover {
+    background: #4b0c91;
+}
+
+@media (max-width: 400px) {
+
+    .board {
+        grid-template-columns: repeat(3, 80px);
+        grid-template-rows: repeat(3, 80px);
+    }
+
+    .cell {
+        width: 80px;
+        height: 80px;
+        font-size: 35px;
+    }
+
+    .game-container {
+        padding: 20px;
+    }
+}
